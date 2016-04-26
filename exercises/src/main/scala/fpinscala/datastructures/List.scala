@@ -50,19 +50,70 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
 
-  def tail[A](l: List[A]): List[A] = sys.error("todo")
+  def tail[A](l: List[A]): List[A] = l match {
+    case Nil => sys.error("tail of empty list")
+    case Cons(_,t) => t
+  }
 
-  def setHead[A](l: List[A], h: A): List[A] = sys.error("todo")
+  def setHead[A](l: List[A], h: A): List[A] =  l match {
+    case Nil => sys.error("tail of empty list")
+    case Cons(_,t) =>  Cons(h,t)
+  }
 
-  def drop[A](l: List[A], n: Int): List[A] = sys.error("todo")
+  def drop[A](l: List[A], n: Int): List[A] = {
+    if(n <= 0 ) l
+    else {
+      l match {
+        case Nil => Nil
+        case Cons(_, t) => drop(t, n - 1)
+      }
+    }
+  }
 
-  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = sys.error("todo")
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
+    case Cons(h, t) if f(h) => dropWhile(t, f)
+    case _ => l
+  }
 
-  def init[A](l: List[A]): List[A] = sys.error("todo")
+  //将函数参数分成多个参数列表,可以改进类型推倒能力
+  def dropWhile2[A](l: List[A])(f: A => Boolean): List[A] = l match {
+    case Cons(h, t) if f(h) => dropWhile(t, f)
+    case _ => l
+  }
 
-  def length[A](l: List[A]): Int = sys.error("todo")
+  def init[A](l: List[A]): List[A] = {
+    l match {
+      case Nil => sys.error("error")
+      case (h,Nil) => Nil
+      case (h,t) => Cons(h,init(t))
+    }
+  }
 
-  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = sys.error("todo")
+  def length[A](l: List[A]): Int =
+    foldRight(l,0)((_,y) => 1 + y)
+
+  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B =
+    l match {
+      case Nil => z
+      case Cons(h,t) => foldLeft(t,f(z, h))(f)
+    }
+
+  def sum3(ints: List[Int]): Int = foldLeft(ints,0)(_ + _)
+
+  def product3(ds: List[Double]): Double =  foldLeft(ds,1.0)(_ * _)
+
+  def length[A](l: List[A]): Int =
+    foldLeft(l,0)((x,_) => 1 + x)
+
+
+  def reverse[A](xs:List[A]):List[A] = ???
 
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
+
+  object AAA {
+    val xs:List[Int] = List(1,2,3,4)
+    val ex1 = dropWhile(xs, (x:Int) => x < 4) // Int 不能省略,否则编译不过
+    val ex2 = dropWhile2(xs)(_ < 4)  // 可以省略类型定义,类型推导能力得到了加强
+
+  }
 }
