@@ -81,13 +81,14 @@ object List { // `List` companion object. Contains functions for creating and wo
     case _ => l
   }
 
-  def init[A](l: List[A]): List[A] = {
+  //移除列表中的最后一个元素
+  def init[A](l: List[A]): List[A] =
     l match {
       case Nil => sys.error("error")
-      case (h,Nil) => Nil
-      case (h,t) => Cons(h,init(t))
+      case Cons(_,Nil) => Nil
+      case Cons(h,t) => Cons(h,init(t))
     }
-  }
+
 
   def length[A](l: List[A]): Int =
     foldRight(l,0)((_,y) => 1 + y)
@@ -102,11 +103,11 @@ object List { // `List` companion object. Contains functions for creating and wo
 
   def product3(ds: List[Double]): Double =  foldLeft(ds,1.0)(_ * _)
 
-  def length[A](l: List[A]): Int =
+  def length2[A](l: List[A]): Int =
     foldLeft(l,0)((x,_) => 1 + x)
 
 
-  def reverse[A](xs:List[A]):List[A] = ???
+  def reverse[A](xs:List[A]):List[A] = foldLeft(xs,List[A]())((bs,h) => Cons(h,bs))
 
   def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
 
