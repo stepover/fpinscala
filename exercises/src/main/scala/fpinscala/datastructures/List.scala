@@ -84,8 +84,8 @@ object List { // `List` companion object. Contains functions for creating and wo
   def init[A](l: List[A]): List[A] = {
     l match {
       case Nil => sys.error("error")
-      case (h,Nil) => Nil
-      case (h,t) => Cons(h,init(t))
+      case Cons(h,Nil) => Nil
+      case Cons(h,t) => Cons(h,init(t))
     }
   }
 
@@ -102,7 +102,7 @@ object List { // `List` companion object. Contains functions for creating and wo
 
   def product3(ds: List[Double]): Double =  foldLeft(ds,1.0)(_ * _)
 
-  def length[A](l: List[A]): Int =
+  def length2[A](l: List[A]): Int =
     foldLeft(l,0)((x,_) => 1 + x)
 
 
