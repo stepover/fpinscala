@@ -130,7 +130,7 @@ object RNG {
   // resulting list would appear in reverse order. It would be arguably better
   // to use `foldLeft` followed by `reverse`. What do you think?
   def sequence[A](fs: List[Rand[A]]): Rand[List[A]] =
-    fs.foldRight(unit(List[A]()))((f, acc) => map2(f, acc)(_ :: _))
+    fs.foldRight(unit(List[A]()))((f:Rand[A], acc: Rand[List[A]]) => map2(f, acc)(_ :: _))
 
   // It's interesting that we never actually need to talk about the `RNG` value
   // in `sequence`. This is a strong hint that we could make this function
